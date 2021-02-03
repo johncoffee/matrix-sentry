@@ -3,7 +3,8 @@ import { AutojoinRoomsMixin, MatrixClient, SimpleFsStorageProvider, } from 'matr
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') })
 
 // args
-const argv = require('yargs/yargs')(process.argv.slice(2)).argv
+const argv:{[k: string]: any} = require('yargs-parser')(process.argv.slice(2))
+
 let verbose: boolean = argv.verbose
 
 const logger = (str: string) => process.send && process.send(str)
