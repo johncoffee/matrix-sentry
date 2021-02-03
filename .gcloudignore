@@ -1,0 +1,9 @@
+test
+fixtures
+src
+.env
+.git
+.idea
+.vscode
+node_modules
+tmp

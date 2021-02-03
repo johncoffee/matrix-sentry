@@ -1,0 +1,16 @@
+runtime: nodejs12
+env: standard
+
+#beta_settings:
+#  cloud_sql_instances: endless-x-291311:europe-north1:wtg-db
+
+instance_class: F4
+
+automatic_scaling:
+  target_cpu_utilization: 0.75
+  min_instances: 1
+  max_instances: 4
+  min_pending_latency: 250ms
+  max_pending_latency: automatic
+  max_concurrent_requests: 80
+

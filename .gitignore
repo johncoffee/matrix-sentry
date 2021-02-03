@@ -1,0 +1,14 @@
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+
+ormconfig.json
+**/.env
+
+test/**/*.js
+test/**/*.map
+src/**/*.js
+src/**/*.map
