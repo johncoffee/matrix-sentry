@@ -38,24 +38,26 @@ app.get('/', (req, res) => {
   res.status(s.OK).json({status:'ok'})
 })
 
-let matrixProcess:ChildProcess = botHandler()
+let matrixProcess:ChildProcess
+
+botHandler()
+  .then(p => matrixProcess = p)
+  .catch(e => console.error(e))
 
 // sentry-webhook
 app.post('/sentry-webhook', ((req, res) => {
 
   const json = req.body
-  console.log('Stuff happened! Please see '+json.url)
-  // console.log(json.data.event.web_url)
 
   try {
     matrixProcess.send({debug:json})
 
     switch (json.action) {
       case 'created':
-        handleIssueCreated(json.data)
+        handleIssueCreated(json.data.issue)
         break
       case 'resolved':
-        handleIssueResolved(json.data)
+        handleIssueResolved(json.data.issue)
         break
     }
   }
@@ -86,14 +88,31 @@ function handleIssueResolved (issue:any) {
 }
 
 app.get('/send', (req, res) => {
-  if (!matrixProcess || matrixProcess.killed) {
-    return res.send('matrix ded')
+  if (!matrixProcess) {
+    return res.status(s.SERVICE_UNAVAILABLE).send('matrix not initialized - try again')
   }
-  matrixProcess.send({msg: req.query.msg}, err => err ?
-    res.send(err) : res.end('pretty ok..'))
+  if (matrixProcess.killed) {
+    return res.status(s.INTERNAL_SERVER_ERROR).send('matrix ded')
+  }
+  matrixProcess.send({msg: req.query.msg}, err => (err) ?
+    res.status(s.INTERNAL_SERVER_ERROR).send(err) :
+    res.end('pretty ok..'))
 })
 
-app.get('/close', (req, res) => {
+app.get('/restart-matrix', (req, res) => {
+  try {
+    botHandler()
+      .then(p => matrixProcess = p)
+      .catch(e => console.error(e))
+  }
+  catch(e) {
+    return res.status(500).send(e)
+  }
+
+  res.end("Restarting matrix")
+})
+
+app.get('/_ah/stop', (req, res) => {
   try {
     if (!matrixProcess?.killed) {
       matrixProcess?.kill()
@@ -102,5 +121,6 @@ app.get('/close', (req, res) => {
   catch (e) {
     console.error(e)
   }
-  res.end()
+
+  res.status(s.NO_CONTENT).end()
 })
