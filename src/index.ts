@@ -1,5 +1,5 @@
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') })
-import { startServer } from './src/server'
+import { startServer } from './server'
 
 startServer().then(()=> {
   if (process.env.GAE_APPLICATION) {

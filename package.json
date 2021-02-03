@@ -11,12 +11,13 @@
   "scripts": {
     "check": "nodemon -e ts --exec 'tsc --noUnusedLocals true --noEmit true'",
     "build": "npm run clean && tsc -p . --noEmit false",
-    "start": "node ./build/index.js",
-    "develop": "nodemon --exec 'ts-node index.ts' -e ts,json",
+    "start": "node ./src/index.js",
+    "develop": "nodemon --exec 'ts-node src/index.ts' -e ts,json",
     "test": "mocha --timeout 10000 --require ts-node/register test/**/*.test.ts",
-    "predeploy:staging": "npm run build",
-    "deploy:staging": "gcloud app deploy ./app-staging.yaml --project eko-matrix --version staging --promote --quiet",
-    "clean": "rimraf './build/'"
+    "predeploy": "npm run build",
+    "deploy": "gcloud app deploy ./app-staging.yaml --project eko-matrix --version staging --promote --quiet",
+    "postdeploy": "npm run clean",
+    "clean": "rimraf './src/**/*.js'"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

@@ -1,6 +1,7 @@
 import express from 'express'
 import { botHandler } from './bot-handler'
 import { ChildProcess } from 'child_process'
+import s from "http-status-codes"
 
 export async function startServer () {
   // Start the server
@@ -34,7 +35,7 @@ app.use('/', (req, res, next) => {
 
 // empty frontpage
 app.get('/', (req, res) => {
-  res.json({status:'ok'})
+  res.status(s.OK).json({status:'ok'})
 })
 
 let matrixProcess:ChildProcess = botHandler()
@@ -60,10 +61,10 @@ app.post('/sentry-webhook', ((req, res) => {
   }
   catch (e) {
     console.error(e)
-    return res.status(500).end()
+    return res.status(s.INTERNAL_SERVER_ERROR).end()
   }
 
-  res.status(204).end()
+  res.status(s.NO_CONTENT).end()
 }))
 
 function handleIssueCreated (issue:any) {

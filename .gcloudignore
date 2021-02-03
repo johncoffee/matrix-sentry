@@ -1,9 +1,10 @@
+node_modules
+src/**/*.ts
 test
-fixtures
-src
+tmp
+
 .env
+
 .git
 .idea
 .vscode
-node_modules
-tmp

@@ -1,5 +1,6 @@
 import fetch from 'node-fetch'
-import { ok, strictEqual } from 'assert'
+import { ok } from 'assert'
+// ts-ignore
 import s from 'http-status-codes'
 export const baseUrl = `http://localhost:${process.env.PORT}`
 
@@ -21,6 +22,7 @@ export async function postJSON(path:string, inputBody:any, userId = 'xyz') {
   return [jsonRes, res]
 }
 
+// ts-ignore
 export async function getJSON(path:string, userId:string = '') {
   const res = await fetch(baseUrl + path,{
     method: 'get',
